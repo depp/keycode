@@ -28,8 +28,66 @@ conditions.  Therefore we can come up with a naming system for keys
 that is universally portable, at least to platforms for which we have
 reverse engineered the key codes.
 
-Platform information
---------------------
+How to use this library
+-----------------------
+
+Copy the source files into your game (you only need *.c and *.h), or
+use a Git submodule if you'd rather.  The source code license is the
+very permissive FreeBSD style license, so you do not have to share.
+
+The "keycode.h" header defines symbolic names for keys that you can
+use, such as KEY_A and KEY_PageDown.  The values correspond to the USB
+HID key codes from the USB HID Usage Tables, section 10.  Each
+constant in this file defines the location of a key and not its
+character meaning.  For example, KEY_A corresponds to A on a US
+keyboard, but it corresponds to Q on a French keyboard layout.
+
+The "keyid.h" header defines functions for looking up the name of a
+key code and looking up a key code by name.  This allows you to write
+configuration files in a sensible way.
+
+The "keytable.h" header defines tables for converting between the HID
+codes defined in "keycode.h" (e.g., KEY_A) and the platform-specific
+codes.
+
+Example of use
+--------------
+
+Suppose you are using WinAPI to make a game.  You will receive
+WM_KEYDOWN and WM_KEYUP messages from the OS, and the associated
+wParam will be a "Windows virtual key code".  Map the key code to a
+cross-platform key code using the table in "keytable.h".
+
+    #include "keytable.h"
+    LRESULT CALLBACK wndProc(
+        HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+    {
+        switch (uMsg) {
+        case WM_KEYDOWN:
+            if (wParam >= 0 && wParam <= 255)
+                handleKeyDown(WIN_NATIVE_TO_HID[wParam]);
+            break;
+
+        ...
+        }
+    }
+
+In your cross-platform game code, you can compare the key code against
+the constants in "keycode.h".
+
+    void handleKeyDown(int code)
+    {
+        /* WASD in the US, ZQSD in France... */
+        switch (code) {
+        case KEY_W: ...
+        case KEY_A: ...
+        case KEY_S: ...
+        case KEY_D: ...
+        }
+    }
+
+Implementation details
+----------------------
 
 There is one platform which is a pain: X11.
 
@@ -49,11 +107,11 @@ attached to an X server to generate different key codes for what are
 logically the same keys.  We can hard code names corresponding to the
 XKB key names.
 
-The keyboard description can be retrieved at runtime by the
-XkbGetKeyboard function, which returns an XkbDescRec structure with a
-"names" and "geom" field.  Together these map key codes to four-byte
-names.  Note that aliases in the "geom" field override those in the
-"names" field.
+We can query the keyboard description at runtime using the
+XkbGetKeyboard function, but I have been unsuccessful in extracting
+the key codes at runtime.  It appears that XKB eliminates this
+information when the key map is compiled, and simply returns NULL at
+runtime.
 
 More information: http://berrange.com/tags/scan-codes/
 
@@ -61,40 +119,6 @@ On Windows, Microsoft has specified the "Windows Virtual Key" for each
 key, i.e., the key code.  As on the Mac, the hardware keycodes are
 abstracted away by the operating system.  We can hard code names
 corresponding to those constants.
-
-How mapping works
------------------
-
-The game maintains two configuration tables: the keycode table and the
-key id table.  Both map keys to actions.
-
-The keycode table is derived from the key id table at runtime.  Since
-the keycode table will vary from platform to platform, it is never
-written to disk.  All configuration changes modify the key id table.
-
-The key id table maps key identifiers, which are strings, to actions.
-Sensible defaults can be hard-coded into the application without
-worries about cross-platform concerns.  The table can be written to
-and read from disk and shared across platforms.
-
-Each platform has code which maps between key ids and key codes.  The
-mapping is chosen so the same logical keys will map to the same ids on
-most platforms.  For example, there is a key id "A" which maps to the
-same key on all platforms, even if it produces the character "Q" with
-French keyboard layouts.  Since some keyboards have unusual keys,
-these are mapped to non-portable key names comprised of a platform
-prefix and a key code, e.g., "MAC_192" or "WINDOWS_205".  These
-non-portable keys will still be preserved in key id tables on
-platforms which do not have these keys, but since there is no
-corresponding key code, they will not show up in the key code table.
-This is the reason why the key code table is always derived from the
-key id table and never the other way around.
-
-Platforms are also capable of mapping key codes to and from key
-display names.  This allows the game to display to the user familiar
-names for keys.  On a Mac with a French keyboard layout, key id "A"
-will map to key code 0, and the game will display it as "Q" which
-should match the label on the physical key.
 
 Table generation
 ----------------
