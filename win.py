@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# Copyright 2011-2012 Dietrich Epp <depp@zdome.net>
+# See LICENSE.txt for details.
 import re, sys, os
 if len(sys.argv) != 2:
     print >>sys.stderr, "Usage: win.py path/to/WinUser.h"

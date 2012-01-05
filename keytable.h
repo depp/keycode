@@ -1,5 +1,7 @@
-#ifndef CLIENT_KEYBOARD_KEYTABLE_H
-#define CLIENT_KEYBOARD_KEYTABLE_H
+/* Copyright 2011-2012 Dietrich Epp <depp@zdome.net>
+   See LICENSE.txt for details.  */
+#ifndef KEYCODE_KEYTABLE_H
+#define KEYCODE_KEYTABLE_H
 #ifdef __cplusplus
 extern "C" {
 #endif
