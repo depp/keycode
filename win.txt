@@ -1,0 +1,125 @@
+; Mac keycode table
+; The first column is the USB Usage ID
+; The second column is derived from the virtual key code name
+; "VK_" is omitted
+; The third column (optional) is a custom name to display
+; for this platform
+; Note: 255 must be unused (it means "none")
+
+; A-Z, 0-9 are ASCII
+4	65
+5	66
+6	67
+7	68
+8	69
+9	70
+10	71
+11	72
+12	73
+13	74
+14	75
+15	76
+16	77
+17	78
+18	79
+19	80
+20	81
+21	82
+22	83
+23	84
+24	85
+25	86
+26	87
+27	88
+28	89
+29	90
+30	49
+31	50
+32	51
+33	52
+34	53
+35	54
+36	55
+37	56
+38	57
+39	48
+
+40	RETURN	Enter
+41	ESCAPE
+42	BACK	Backspace
+43	TAB
+44	SPACE
+45	OEM_MINUS
+46	OEM_PLUS
+47	OEM_4
+48	OEM_6
+49	OEM_5
+51	OEM_1
+52	OEM_7
+53	OEM_3
+54	OEM_COMMA
+55	OEM_PERIOD
+56	OEM_2
+57	CAPITAL
+58	F1
+59	F2
+60	F3
+61	F4
+62	F5
+63	F6
+64	F7
+65	F8
+66	F9
+67	F10
+68	F11
+69	F12
+70	SNAPSHOT
+71	SCROLL
+72	PAUSE
+73	INSERT
+74	HOME
+75	PRIOR
+76	DELETE
+77	END
+78	NEXT
+79	RIGHT
+80	LEFT
+81	DOWN
+82	UP
+83	NUMLOCK
+84	DIVIDE
+85	MULTIPLY
+86	SUBTRACT
+87	ADD
+89	NUMPAD1
+90	NUMPAD2
+91	NUMPAD3
+92	NUMPAD4
+93	NUMPAD5
+94	NUMPAD6
+95	NUMPAD7
+96	NUMPAD8
+97	NUMPAD9
+98	NUMPAD0
+99	DECIMAL
+104	F13
+105	F14
+106	F15
+107	F16
+108	F17
+109	F18
+110	F19
+111	F20
+112	F21
+113	F22
+114	F23
+115	F24
+
+; Can't distinguish between left/right versions
+; (this would require extra code)
+224	CONTROL
+225	SHIFT
+226	MENU
+
+; As some kind of cruel joke, you *can* distinguish between
+; the left and right Windows keys.
