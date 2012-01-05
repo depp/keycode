@@ -42,6 +42,11 @@ constant in this file defines the location of a key and not its
 character meaning.  For example, KEY_A corresponds to A on a US
 keyboard, but it corresponds to Q on a French keyboard layout.
 
+The HID Usage tables are available from the USB Implementers Forum
+website:
+
+http://www.usb.org/developers/devclass_docs/Hut1_11.pdf
+
 The "keyid.h" header defines functions for looking up the name of a
 key code and looking up a key code by name.  This allows you to write
 configuration files in a sensible way.
