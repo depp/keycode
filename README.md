@@ -1,5 +1,4 @@
-Keycodes
-========
+# Keycodes
 
 The main problem here is that users want to specify a keyboard layout
 using key names, e.g., WASD, but it is better for computers to respond
@@ -28,8 +27,7 @@ conditions.  Therefore we can come up with a naming system for keys
 that is universally portable, at least to platforms for which we have
 reverse engineered the key codes.
 
-How to use this library
------------------------
+## How to use this library
 
 Copy the source files into your game (you only need *.c and *.h), or
 use a Git submodule if you'd rather.  The source code license is the
@@ -55,8 +53,7 @@ The "keytable.h" header defines tables for converting between the HID
 codes defined in "keycode.h" (e.g., KEY_A) and the platform-specific
 codes.
 
-Example of use
---------------
+## Example of use
 
 Suppose you are using WinAPI to make a game.  You will receive
 WM_KEYDOWN and WM_KEYUP messages from the OS, and the associated
@@ -108,8 +105,7 @@ the constants in "keycode.h".
         }
     }
 
-Implementation details
-----------------------
+## Implementation details
 
 There is one platform which is a pain: X11.
 
@@ -142,8 +138,7 @@ key, i.e., the key code.  As on the Mac, the hardware keycodes are
 abstracted away by the operating system.  We can hard code names
 corresponding to those constants.
 
-Table generation
-----------------
+## Table generation
 
 Much of the code is generated from four files in the source tree, each
 containing a table mapping USB HID usage codes to names.  The
