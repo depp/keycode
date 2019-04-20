@@ -64,13 +64,30 @@ wParam will be a "Windows virtual key code".  Map the key code to a
 cross-platform key code using the table in "keytable.h".
 
     #include "keytable.h"
+    
+    int VirtualKeyToKeyCode(WPARAM wParam, LPARAM lParam)
+    {
+        switch (wParam)
+        {
+        case VK_SHIFT:
+            wParam = MapVirtualKey((lParam & 0x00ff0000) >> 16, MAPVK_VSC_TO_VK_EX);
+            return wParam == VK_LSHIFT ? KEY_LeftShift : KEY_RightShift;
+        case VK_CONTROL:
+            return (lParam & 0x01000000) ? KEY_RightControl : KEY_LeftControl;
+        case VK_MENU:
+            return (lParam & 0x01000000) ? KEY_RightAlt : KEY_LeftAlt;
+        default:
+            return WIN_NATIVE_TO_HID[wParam];
+        }
+    }
+
     LRESULT CALLBACK wndProc(
         HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
         switch (uMsg) {
         case WM_KEYDOWN:
             if (wParam >= 0 && wParam <= 255)
-                handleKeyDown(WIN_NATIVE_TO_HID[wParam]);
+                handleKeyDown(VirtualKeyToKeyCode(wParam));
             break;
 
         ...
