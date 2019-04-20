@@ -158,3 +158,20 @@ mapping these key names to numeric values.
 The XKB table, 'xkb.txt', refers to four-byte key names appearing in
 XKB configuration files.  There is no fixed mapping from key codes to
 key names in X11, so the key names are queried at runtime.
+
+## Example Programs
+
+### X11
+
+The `x11_test` program will read X11 keyboard events and print out the key X11
+keycode and the corresponding HID code. It will print out lines like this:
+
+    Key Press:
+      X11 Keycode: 38
+      HID Keycode: 4 (A)
+
+You can use this to verify that the mapping is correct, and find out which keys
+are intercepted by the windowing system and not passed to your program. For
+example, on a Gnome 3 system, you might notice that the Print Screen key
+captures a screenshot but the event is not passed to your program, and the Left
+Super key (a.k.a. Left Windows key) is also intercepted.
