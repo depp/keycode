@@ -43,7 +43,16 @@ def macos_read_table(infile):
         yield int(m.group(2), 0), m.group(1).decode("ASCII")
 
 
-PLATFORMS = {"macos": macos_read_table}
+def windows_read_table(infile):
+    if infile is None:
+        die("Cannot find WinUser.h automatically, use --input.")
+    with open(infile, "rb") as fp:
+        text = fp.read()
+    for m in re.finditer(rb"#define\s+VK_(\w+)\s+(\w+)", text):
+        yield int(m.group(2), 0), m.group(1).decode("ASCII")
+
+
+PLATFORMS = {"macos": macos_read_table, "windows": windows_read_table}
 
 
 def write_table(table, fp):
@@ -71,6 +80,8 @@ def main(argv):
         table = list(read_table(args.input))
     except FileNotFoundError as ex:
         die(ex)
+    if not table:
+        die("Could not find keycode definitions in input file.")
     if args.output is None:
         write_table(table, sys.stdout)
     else:
