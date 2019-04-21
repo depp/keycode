@@ -10,6 +10,16 @@ def die(*msg):
     raise SystemExit(1)
 
 
+def linux_read_table(infile):
+    if infile is None:
+        infile = "/usr/include/linux/input-event-codes.h"
+    with open(infile, "rb") as fp:
+        text = fp.read()
+    for m in re.finditer(rb"#define\s+KEY_(\w+)\s+(\w+)", text):
+        if not m.group(2).startswith(b"KEY_"):
+            yield int(m.group(2), 0), m.group(1).decode("ASCII")
+
+
 def macos_open_header(infile):
     if infile is not None:
         return open(infile, "rb")
@@ -52,7 +62,11 @@ def windows_read_table(infile):
         yield int(m.group(2), 0), m.group(1).decode("ASCII")
 
 
-PLATFORMS = {"macos": macos_read_table, "windows": windows_read_table}
+PLATFORMS = {
+    "linux": linux_read_table,
+    "macos": macos_read_table,
+    "windows": windows_read_table,
+}
 
 
 def write_table(table, fp):
