@@ -18,6 +18,7 @@
 		38A0C200226BEBD000723BAA /* keytable_mac.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = keytable_mac.c; path = ../../keytable_mac.c; sourceTree = "<group>"; };
 		38A0C201226BEBD100723BAA /* keyid.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = keyid.c; path = ../../keyid.c; sourceTree = "<group>"; };
 		38A0C205226BEE4F00723BAA /* keytable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = keytable.h; path = ../../keytable.h; sourceTree = "<group>"; };
+		38C3FF4D226C351800624B0F /* keycode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = keycode.h; path = ../../keycode.h; sourceTree = "<group>"; };
 		38F48EB1226BE3D200C08AE9 /* CocoaTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CocoaTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		38F48EBD226BE3D400C08AE9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		38F48EBF226BE3D400C08AE9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -55,6 +56,7 @@
 		38F48EB3226BE3D200C08AE9 /* CocoaTest */ = {
 			isa = PBXGroup;
 			children = (
+				38C3FF4D226C351800624B0F /* keycode.h */,
 				38A0C205226BEE4F00723BAA /* keytable.h */,
 				38A0C201226BEBD100723BAA /* keyid.c */,
 				38A0C1FF226BEBD000723BAA /* keyid.h */,
