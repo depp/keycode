@@ -43,7 +43,7 @@ keyboard, but it corresponds to Q on a French keyboard layout.
 The HID Usage tables are available from the USB Implementers Forum
 website:
 
-http://www.usb.org/developers/hidpage/Hut1_12v2.pdf
+https://www.usb.org/sites/default/files/documents/hut1_12v2.pdf
 
 The "keyid.h" header defines functions for looking up the name of a
 key code and looking up a key code by name.  This allows you to write
