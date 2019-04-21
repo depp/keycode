@@ -70,8 +70,8 @@ PLATFORMS = {
 
 
 def write_table(table, fp):
-    for code, name in table:
-        print(code, name, file=fp)
+    for row in table:
+        fp.write("{},{}\n".format(*row))
 
 
 def main(argv):
@@ -96,11 +96,12 @@ def main(argv):
         die(ex)
     if not table:
         die("Could not find keycode definitions in input file.")
-    if args.output is None:
-        write_table(table, sys.stdout)
-    else:
-        with open(args.input, "w") as fp:
-            write_table(table, fp)
+    output = args.output
+    if output is None:
+        repo = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        output = os.path.join(repo, "data", args.platform + "_scancodes.csv")
+    with open(output, "w") as fp:
+        write_table(table, fp)
 
 
 if __name__ == "__main__":
