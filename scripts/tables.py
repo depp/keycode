@@ -320,7 +320,7 @@ def read_keytable(datadir, name, size, hid_names):
         displayname = name_table.pop(key.name, key.displayname)
         displaynames.append((key.code, displayname))
     if name_table:
-        raise error("Unused name mapping for {}".format(", ".format(
+        raise Error("Unused name mapping for {}".format(", ".join(
             sorted(name_table))))
     to_hid_table = [0] * size
     from_hid_table = [255] * 256
