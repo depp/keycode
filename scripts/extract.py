@@ -8,9 +8,7 @@ import os
 import re
 import sys
 
-
-class Error(Exception):
-    """An error that occurs during keycode extraction."""
+from common import Error
 
 
 def linux_read_table(infile):
