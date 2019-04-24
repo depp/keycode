@@ -256,11 +256,12 @@ def emit_keytable(open_file, keytable):
         fp.write(
             make_xtable(keytable.to_hid_table,
                         "KEYCODE_{}_TO_HID".format(name.upper())))
-        fp.write(TOHID_TEMPLATE.format(
-            name=name,
-            uname=name.upper(),
-            size=len(keytable.to_hid_table),
-        ))
+        fp.write(
+            TOHID_TEMPLATE.format(
+                name=name,
+                uname=name.upper(),
+                size=len(keytable.to_hid_table),
+            ))
     with open_file("{}_fromhid.c".format(name)) as fp:
         fp.write(common_head)
         fp.write(
