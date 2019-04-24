@@ -125,7 +125,7 @@ def read_scancodes(fp):
                     lineno=1)
     for lineno, row in enumerate(reader, 2):
         if len(row) != 2:
-            raise error("Got {} columns, expected 2.".format(len(row)))
+            raise error("Got {} columns, expected 2".format(len(row)))
         codestr, name = row
         try:
             code = int(codestr)
@@ -140,6 +140,44 @@ def read_scancodes(fp):
             codes.add(code)
             if name:
                 result.append(Scancode(code, name))
+    return result
+
+
+def read_names(fp):
+    """Read a display name table mapping HID names to platform-specific names.
+
+    Arguments:
+      fp: Input file
+    Returns:
+      A dictionary mapping HID names to display names
+    """
+    result = {}
+    reader = csv.reader(fp)
+
+    def error(msg):
+        return Error(msg, lineno=lineno)
+
+    row = next(reader)
+    headers = ["Name", "Display Name"]
+    if row != headers:
+        raise Error("Got headers {!r}, expected {!r}".format(row, headers),
+                    lineno=1)
+    for lineno, row in enumerate(reader, 2):
+        try:
+            name, displayname = row
+        except ValueError:
+            raise error("Got {} columns, expected 2".format(len(row)))
+        if not name:
+            continue
+        if not VALID_NAME.fullmatch(name):
+            raise error("Invalid name {!r}".format(name))
+        if name in result:
+            raise error("Duplicate name {!r}".format(name))
+        if not displayname:
+            continue
+        if not VALID_DISPLAYNAME:
+            raise error("Invalid display name {!r}".format(displayname))
+        result[name] = displayname
     return result
 
 
@@ -269,8 +307,15 @@ def read_keytable(datadir, name, size, hid_names):
                             hid_names)
     with ReadFile(datadir, "{}_map.csv".format(name)) as fp:
         builder.apply_keymap(fp)
-    displaynames = [(key.code, key.displayname)
-                    for key in builder.keymap.values()]
+    with ReadFile(datadir, "{}_names.csv".format(name)) as fp:
+        name_table = read_names(fp)
+    displaynames = []
+    for key in builder.keymap.values():
+        displayname = name_table.pop(key.name, key.displayname)
+        displaynames.append((key.code, displayname))
+    if name_table:
+        raise error("Unused name mapping for {}".format(", ".format(
+            sorted(name_table))))
     to_hid_table = [0] * size
     from_hid_table = [255] * 256
     for code, key in sorted(builder.keymap.items()):
