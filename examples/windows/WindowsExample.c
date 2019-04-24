@@ -2,7 +2,6 @@
 // This file is licensed under the terms of the MIT license. See LICENSE.txt
 // for details.
 #include "keycode.h"
-#include "keyid.h"
 #include "keytable.h"
 
 #define WIN32_LEAN_AND_MEAN
@@ -24,37 +23,22 @@ static void die(const wchar_t *msg) {
     ExitProcess(1);
 }
 
-static void show_key(HWND hwnd, WPARAM wParam, LPARAM lParam, int hidCode) {
-    StringCbPrintfW(gLine1, sizeof(gLine1), L"wParam: 0x%x, lParam: 0x%x",
-                    wParam, lParam);
-    const char *name = keyid_name_from_code(hidCode);
-    if (name == NULL) {
-        name = "unknown";
+static void handle_key(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    unsigned keyCode = keycode_windows_from_lparam(lParam);
+    const char *keyName = keycode_windows_rawname(keyCode);
+    if (keyName == NULL) {
+        keyName = "unknown";
     }
-    StringCbPrintfW(gLine2, sizeof(gLine2), L"HID Code: %d (%S)", hidCode,
-                    name);
+    StringCbPrintfW(gLine1, sizeof(gLine1), L"Win Keycode %d (%S)", keyCode,
+                    keyName);
+    unsigned hidCode = KEYCODE_WINDOWS_TO_HID[keyCode];
+    const char *hidName = keycode_windows_name(hidCode);
+    if (hidName == NULL) {
+        hidName = "unknown";
+    }
+    StringCbPrintfW(gLine2, sizeof(gLine2), L"HID Keycode %d (%S)", hidCode,
+                    hidName);
     InvalidateRect(hwnd, NULL, TRUE);
-}
-
-static void handle_key_down(HWND hwnd, WPARAM wParam, LPARAM lParam) {
-    int hidCode = 255;
-    if (0 <= wParam && wParam < 256) {
-        switch (wParam) {
-        case VK_SHIFT: {
-            unsigned key =
-                MapVirtualKeyW((lParam >> 16) & 0xff, MAPVK_VSC_TO_VK_EX);
-            hidCode = key == VK_LSHIFT ? KEY_LeftShift : KEY_RightShift;
-        } break;
-        case VK_CONTROL:
-            hidCode =
-                (lParam & 0x01000000) != 0 ? KEY_RightControl : KEY_LeftControl;
-            break;
-        default:
-            hidCode = WIN_NATIVE_TO_HID[wParam];
-            break;
-        }
-    }
-    show_key(hwnd, wParam, lParam, hidCode);
 }
 
 static void paint_window(HWND hwnd) {
@@ -68,33 +52,15 @@ static void paint_window(HWND hwnd) {
 LRESULT CALLBACK wnd_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     switch (msg) {
     case WM_KEYDOWN:
-        handle_key_down(hwnd, wParam, lParam);
+    case WM_KEYUP:
+    case WM_SYSKEYUP:
+        handle_key(hwnd, msg, wParam, lParam);
         break;
     case WM_SYSKEYDOWN:
-        if (wParam == VK_MENU) {
-            int hidCode;
-            if ((lParam & 0x01000000) != 0) {
-                hidCode = KEY_RightAlt;
-                gAlt[1] = 1;
-            } else {
-                hidCode = KEY_LeftAlt;
-                gAlt[0] = 1;
-            }
-            show_key(hwnd, wParam, lParam, hidCode);
-        } else if (wParam == VK_F4 && (gAlt[0] || gAlt[1])) {
+        if (wParam == VK_F4 && GetKeyState(VK_MENU)) {
             ExitProcess(0);
-        } else {
-            handle_key_down(hwnd, wParam, lParam);
         }
-        break;
-    case WM_SYSKEYUP:
-        if (wParam == VK_MENU) {
-            if ((lParam & 0x01000000) != 0) {
-                gAlt[1] = 0;
-            } else {
-                gAlt[0] = 0;
-            }
-        }
+        handle_key(hwnd, msg, wParam, lParam);
         break;
     case WM_PAINT:
         paint_window(hwnd);

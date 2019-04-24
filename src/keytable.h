@@ -96,6 +96,42 @@ extern const unsigned char KEYCODE_MACOS_TO_HID[128];
    KEYCODE_NONE (255) indicates no mapping. */
 extern const unsigned char KEYCODE_MACOS_FROM_HID[256];
 
+/*
+ * =============================================================================
+ * Windows
+ * =============================================================================
+ */
+
+/* Get the HID keycode for the given Windows keycode. Returns KEY_None (0) if
+   the Windows keycode is not mapped to an HID keycode. The Windows keycode can
+   be taken from from the lParam of an event using keycode_windows_from_lparam.
+   This function is safe to call with any possible input. */
+unsigned keycode_windows_to_hid(unsigned windows_keycode);
+
+/* Get the Windows keycode from the lparam passed to event handlers. This is
+   equal to:
+
+   return ((lparam >> 16) & 0x7f) | ((lparam & (1 << 24)) != 0 ? 0x80 : 0); */
+unsigned keycode_windows_from_lparam(unsigned lparam);
+
+/* Get the raw name of the Windows key code. This is used for debugging. The
+   resulting name is a constant in Windows/input-event-codes.h, with the "KEY_"
+   prefix removed. */
+const char *keycode_windows_rawname(unsigned windows_keycode);
+
+/* Get the display name for an HID key code on Windows. This returns "Command"
+   as the name for the "GUI" keys. Returns NULL if the no Windows keycode is
+   mapped to this HID keycode. Safe to call with any possible input. */
+const char *keycode_windows_name(unsigned hid_keycode);
+
+/* Mapping from Windows key codes to HID key codes.
+   KEY_None (0) indicates no mapping. */
+extern const unsigned char KEYCODE_WINDOWS_TO_HID[256];
+
+/* Mapping from HID key codes to native key codes.
+   KEYCODE_NONE (255) indicates no mapping. */
+extern const unsigned char KEYCODE_WINDOWS_FROM_HID[256];
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

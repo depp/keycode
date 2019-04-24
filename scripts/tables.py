@@ -341,7 +341,7 @@ def read_all(datadir, hid_table):
       List of of Keytable objects
     """
     hid_names = {key.name: key for key in hid_table}
-    platforms = [("linux", 256), ("macos", 128)]
+    platforms = [("linux", 256), ("macos", 128), ("windows", 256)]
     result = []
     for name, size in platforms:
         try:
