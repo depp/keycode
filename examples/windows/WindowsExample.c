@@ -31,7 +31,7 @@ static void handle_key(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     }
     StringCbPrintfW(gLine1, sizeof(gLine1), L"Win Keycode %d (%S)", keyCode,
                     keyName);
-    unsigned hidCode = KEYCODE_WINDOWS_TO_HID[keyCode];
+    unsigned hidCode = keycode_windows_to_hid(keyCode);
     const char *hidName = keycode_windows_name(hidCode);
     if (hidName == NULL) {
         hidName = "unknown";

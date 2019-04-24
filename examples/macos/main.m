@@ -35,12 +35,12 @@
 }
 - (void)keyDown:(NSEvent *)event {
     unsigned keyCode = [event keyCode];
-    unsigned hidCode = keyCode < 128 ? KEYCODE_MACOS_TO_HID[keyCode] : 0;
+    unsigned hidCode = keycode_macos_to_hid(keyCode);
     [self showKey:keyCode hidCode:hidCode];
 }
 - (void)flagsChanged:(NSEvent *)event {
     unsigned keyCode = [event keyCode];
-    unsigned hidCode = keyCode < 128 ? KEYCODE_MACOS_TO_HID[keyCode] : 0;
+    unsigned hidCode = keycode_macos_to_hid(keyCode);
     unsigned mask = keycode_macos_modifier(keyCode);
     unsigned modifiers = [event modifierFlags];
     if ((mask & modifiers) != 0) {

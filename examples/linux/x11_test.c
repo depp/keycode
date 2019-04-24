@@ -18,7 +18,7 @@ static void key_press(XKeyEvent *e) {
     if (keyname == NULL) {
         keyname = "unknown";
     }
-    unsigned hidcode = keycode < 256 ? KEYCODE_LINUX_TO_HID[keycode] : 0;
+    unsigned hidcode = keycode_linux_to_hid(keycode);
     const char *hidname = keycode_linux_name(hidcode);
     if (hidname == NULL) {
         hidname = "unknown";

@@ -228,6 +228,15 @@ def make_xtable(table, name):
     )
 
 
+TOHID_TEMPLATE = """\
+unsigned keycode_{name}_to_hid(unsigned scancode) {{
+    if (scancode >= {size})
+        return 0;
+    return KEYCODE_{uname}_TO_HID[scancode];
+}}
+"""
+
+
 def emit_keytable(open_file, keytable):
     """Emit the code files for a keycode table."""
     name = keytable.name.lower()
@@ -247,6 +256,11 @@ def emit_keytable(open_file, keytable):
         fp.write(
             make_xtable(keytable.to_hid_table,
                         "KEYCODE_{}_TO_HID".format(name.upper())))
+        fp.write(TOHID_TEMPLATE.format(
+            name=name,
+            uname=name.upper(),
+            size=len(keytable.to_hid_table),
+        ))
     with open_file("{}_fromhid.c".format(name)) as fp:
         fp.write(common_head)
         fp.write(
