@@ -20,6 +20,12 @@ def generate(*, datadir, outdir, quiet):
         hid_table = tables.read_hid(fp)
     for key in hid_table:
         print(key)
+    for platform in ["linux", "macos", "windows"]:
+        fname = "{}_scancodes.csv".format(platform)
+        with tables.ReadFile(datadir, fname) as fp:
+            scancode_table = tables.read_scancodes(fp)
+        for key in scancode_table:
+            print(key)
 
 
 def main(argv):

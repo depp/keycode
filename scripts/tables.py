@@ -36,7 +36,7 @@ class ReadFile:
 
 Keycode = collections.namedtuple("Keycode", ["code", "name", "displayname"])
 
-VALID_NAME = re.compile(r"[a-z0-9]*(?: [a-z0-9]+)*", re.IGNORECASE)
+VALID_NAME = re.compile(r"[_a-z0-9]*(?: [_a-z0-9]+)*", re.IGNORECASE)
 VALID_DISPLAYNAME = re.compile(r"[!-~]+(?: [!-~]+)*")
 
 
@@ -90,4 +90,51 @@ def read_hid(fp):
         if displayname in displaynames:
             raise error("Duplicate display name {!r}".format(displayname))
         result.append(Keycode(code, name, displayname))
+    return result
+
+
+Scancode = collections.namedtuple("Scancode", ["code", "name"])
+
+
+def read_scancodes(fp):
+    """Read a scancodes table mapping platform-specific scancodes to names.
+
+    If a scancode appears twice in the file, only the first entry is included.
+    Entries with empty names are filtered out.
+
+    Arguments:
+      fp: Input file
+    Returns:
+      A list of Scancode objects
+    """
+    result = []
+    codes = set()
+    names = set()
+    reader = csv.reader(fp)
+
+    def error(msg):
+        return Error(msg, lineno=lineno)
+
+    row = next(reader)
+    headers = ["Keycode", "Name"]
+    if row != headers:
+        raise Error("Got headers {!r}, expected {!r}".format(row, headers),
+                    lineno=1)
+    for lineno, row in enumerate(reader, 2):
+        if len(row) != 2:
+            raise error("Got {} columns, expected 2.".format(len(row)))
+        codestr, name = row
+        try:
+            code = int(codestr)
+        except ValueError:
+            raise error("Invalid scancode value {!r}".format(codestr))
+        if not VALID_NAME.fullmatch(name):
+            raise error("Invalid scancode name {!r}".format(name))
+        if name and name in names:
+            raise error("Duplicate scancode name {!r}".format(name))
+        names.add(name)
+        if code not in codes:
+            codes.add(code)
+            if name:
+                result.append(Scancode(code, name))
     return result
