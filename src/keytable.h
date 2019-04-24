@@ -72,6 +72,12 @@ extern const unsigned char KEYCODE_LINUX_FROM_HID[256];
    input. */
 unsigned keycode_macos_to_hid(unsigned macos_keycode);
 
+/* Get the modifier flags for a given macOS keycode. Returns 0 if the keycode is
+   not a modifier key. This can be used to distinguish key up and key down
+   events for modifier keys, since modifier key events always have the event
+   type "flagsChanged" and do not distinguish between key up and key down. */
+unsigned keycode_macos_modifier(unsigned macos_keycode);
+
 /* Get the raw name of the macOS key code. This is used for debugging. The
    resulting name is a constant in macos/input-event-codes.h, with the "KEY_"
    prefix removed. */

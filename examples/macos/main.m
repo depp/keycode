@@ -17,7 +17,7 @@
 @interface KCView : NSView
 @property IBOutlet NSTextField *macOSKeyCode;
 @property IBOutlet NSTextField *hidKeyCode;
-- (void)showKey:(int)keyCode;
+- (void)showKey:(unsigned)keyCode hidCode:(unsigned)hidCode;
 @end
 
 @implementation KCView
@@ -41,7 +41,12 @@
 - (void)flagsChanged:(NSEvent *)event {
     unsigned keyCode = [event keyCode];
     unsigned hidCode = keyCode < 128 ? KEYCODE_MACOS_TO_HID[keyCode] : 0;
-    [self showKey:keyCode hidCode:hidCode];
+    unsigned mask = keycode_macos_modifier(keyCode);
+    unsigned modifiers = [event modifierFlags];
+    if ((mask & modifiers) != 0) {
+        // Key down.
+        [self showKey:keyCode hidCode:hidCode];
+    }
 }
 - (BOOL)acceptsFirstResponder {
     return YES;
