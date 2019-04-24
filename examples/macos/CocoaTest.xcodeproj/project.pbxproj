@@ -7,18 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		38A0C203226BEBD100723BAA /* keytable_mac.c in Sources */ = {isa = PBXBuildFile; fileRef = 38A0C200226BEBD000723BAA /* keytable_mac.c */; };
-		38A0C204226BEBD100723BAA /* keyid.c in Sources */ = {isa = PBXBuildFile; fileRef = 38A0C201226BEBD100723BAA /* keyid.c */; };
+		38A9BD2C22701B0B00C6E249 /* linux_rawname.c in Sources */ = {isa = PBXBuildFile; fileRef = 38A9BD2722701B0B00C6E249 /* linux_rawname.c */; };
+		38A9BD2E22701B0B00C6E249 /* macos_rawname.c in Sources */ = {isa = PBXBuildFile; fileRef = 38A9BD2922701B0B00C6E249 /* macos_rawname.c */; };
 		38F48EBE226BE3D400C08AE9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 38F48EBC226BE3D400C08AE9 /* Main.storyboard */; };
 		38F48EC1226BE3D400C08AE9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 38F48EC0226BE3D400C08AE9 /* main.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		38A0C1FF226BEBD000723BAA /* keyid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = keyid.h; path = ../../keyid.h; sourceTree = "<group>"; };
-		38A0C200226BEBD000723BAA /* keytable_mac.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = keytable_mac.c; path = ../../keytable_mac.c; sourceTree = "<group>"; };
-		38A0C201226BEBD100723BAA /* keyid.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = keyid.c; path = ../../keyid.c; sourceTree = "<group>"; };
-		38A0C205226BEE4F00723BAA /* keytable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = keytable.h; path = ../../keytable.h; sourceTree = "<group>"; };
-		38C3FF4D226C351800624B0F /* keycode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = keycode.h; path = ../../keycode.h; sourceTree = "<group>"; };
+		38A9BD2722701B0B00C6E249 /* linux_rawname.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = linux_rawname.c; sourceTree = "<group>"; };
+		38A9BD2922701B0B00C6E249 /* macos_rawname.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = macos_rawname.c; sourceTree = "<group>"; };
+		38A9BD2B22701B0B00C6E249 /* keytable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = keytable.h; sourceTree = "<group>"; };
 		38F48EB1226BE3D200C08AE9 /* CocoaTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CocoaTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		38F48EBD226BE3D400C08AE9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		38F48EBF226BE3D400C08AE9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -37,9 +35,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		38A9BD2622701B0B00C6E249 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				38A9BD2722701B0B00C6E249 /* linux_rawname.c */,
+				38A9BD2922701B0B00C6E249 /* macos_rawname.c */,
+				38A9BD2B22701B0B00C6E249 /* keytable.h */,
+			);
+			name = src;
+			path = ../../src;
+			sourceTree = "<group>";
+		};
 		38F48EA8226BE3D200C08AE9 = {
 			isa = PBXGroup;
 			children = (
+				38A9BD2622701B0B00C6E249 /* src */,
 				38F48EB3226BE3D200C08AE9 /* CocoaTest */,
 				38F48EB2226BE3D200C08AE9 /* Products */,
 			);
@@ -56,11 +66,6 @@
 		38F48EB3226BE3D200C08AE9 /* CocoaTest */ = {
 			isa = PBXGroup;
 			children = (
-				38C3FF4D226C351800624B0F /* keycode.h */,
-				38A0C205226BEE4F00723BAA /* keytable.h */,
-				38A0C201226BEBD100723BAA /* keyid.c */,
-				38A0C1FF226BEBD000723BAA /* keyid.h */,
-				38A0C200226BEBD000723BAA /* keytable_mac.c */,
 				38F48EBC226BE3D400C08AE9 /* Main.storyboard */,
 				38F48EBF226BE3D400C08AE9 /* Info.plist */,
 				38F48EC0226BE3D400C08AE9 /* main.m */,
@@ -137,8 +142,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				38A0C204226BEBD100723BAA /* keyid.c in Sources */,
-				38A0C203226BEBD100723BAA /* keytable_mac.c in Sources */,
+				38A9BD2E22701B0B00C6E249 /* macos_rawname.c in Sources */,
+				38A9BD2C22701B0B00C6E249 /* linux_rawname.c in Sources */,
 				38F48EC1226BE3D400C08AE9 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
