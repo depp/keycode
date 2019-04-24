@@ -143,20 +143,118 @@ def read_scancodes(fp):
     return result
 
 
+class KeymapBuilder:
+    """Platform-specific scancode to HID keycode map builder.
+
+    Attributes:
+      scancode_map: Map from platform scancode name to value
+      used: Set of used scancode names
+      keymap: Map from scancode to Keycode objects
+      hid_names: Map from name to Keycode for all HID keycodes
+    """
+
+    def __init__(self, scancodes, hid_names):
+        scancode_map = {}
+        for code, name in scancodes:
+            scancode_map[name] = code
+        self.scancode_map = scancode_map
+        self.used = set()
+        self.keymap = {}
+        self.hid_names = hid_names
+
+    def apply_keymap(self, fp):
+        """Apply the rules in a keymap file."""
+        reader = csv.reader(fp)
+        row = next(reader)
+        headers = ["Platform Name", "HID Name"]
+        if row != headers:
+            raise Error("Got headers {!r}, expected {!r}".format(row, headers),
+                        lineno=1)
+        for lineno, row in enumerate(reader, 2):
+            if not row:
+                continue
+            try:
+                self.apply_row(row)
+            except Error as ex:
+                ex.lineno = lineno
+                raise ex
+
+    def apply_row(self, row):
+        """Apply the rule in a single row of a keymap file."""
+        try:
+            match, name = row
+        except ValueError:
+            raise Error("Got {} columns, expected 2".format(len(row)))
+        if match.startswith("/"):
+            self.apply_regex(match, name)
+        else:
+            self.apply_single(match, name)
+
+    def apply_regex(self, match, name):
+        """Apply a regulare expression rule."""
+        if len(match) <= 2 or not match.endswith("/"):
+            raise Error("Invalid regular expression {!r}".format(match))
+        try:
+            regex = re.compile(match[1:-1])
+        except ValueError as ex:
+            raise Error("Invalid regular expression {!r}: {}".format(
+                match, ex))
+        used_size = len(self.used)
+        for sname in set(self.scancode_map).difference(self.used):
+            m = regex.fullmatch(sname)
+            if m is None:
+                continue
+            if not name:
+                self.used.add(sname)
+                continue
+            hname = m.expand(name)
+            hid_key = self.hid_names.get(hname)
+            if hid_key is None:
+                continue
+            code = self.scancode_map[sname]
+            self.keymap[code] = hid_key
+            self.used.add(sname)
+        if len(self.used) == used_size:
+            raise Error("No scancodes match {!r}".format(match))
+
+    def apply_single(self, match, name):
+        """Apply a direct mapping rule."""
+        code = self.scancode_map.get(match)
+        if code is None:
+            raise Error("No scancode has name {!r}".format(match))
+        if match in self.used:
+            raise Error("Scancode {!r} already has mapping".format(match))
+        self.used.add(match)
+        if not name:
+            return
+        hid_key = self.hid_names.get(name)
+        if hid_key is None:
+            raise Error("No HID key is named {!r}".format(name))
+        self.keymap[code] = hid_key
+
+
 class Keytable:
     """A keycode table for a platform.
 
     Attributes:
       name: Platform name
       scancodes: List of Scancode objects
+      displaynames: List of (keycode, name) mapping HID names to
+        platform-specific human-readable names
+      to_hid_table: Array mapping scancodes to HID keycodes
+      from_hid_table: Array mapping HID keycodes to scancodes
     """
 
-    def __init__(self, name, scancodes):
+    def __init__(self, name, scancodes, displaynames, to_hid_table,
+                 from_hid_table):
         self.name = name
         self.scancodes = scancodes
+        self.displaynames = displaynames
+        self.to_hid_table = to_hid_table
+        self.from_hid_table = from_hid_table
 
 
-def read_keytable(datadir, name):
+def read_keytable(datadir, name, size, hid_names):
     """Read keycode tables.
 
     Arguments:
@@ -167,10 +265,23 @@ def read_keytable(datadir, name):
     """
     with ReadFile(datadir, "{}_scancodes.csv".format(name)) as fp:
         scancodes = read_scancodes(fp)
-    return Keytable(name, scancodes)
+    builder = KeymapBuilder([key for key in scancodes if key.code < size],
+                            hid_names)
+    with ReadFile(datadir, "{}_map.csv".format(name)) as fp:
+        builder.apply_keymap(fp)
+    displaynames = [(key.code, key.displayname)
+                    for key in builder.keymap.values()]
+    to_hid_table = [0] * size
+    from_hid_table = [255] * 256
+    for code, key in sorted(builder.keymap.items()):
+        to_hid_table[code] = key.code
+        if from_hid_table[key.code] == 255:
+            from_hid_table[key.code] = code
+    return Keytable(name, scancodes, displaynames, to_hid_table,
+                    from_hid_table)
 
 
-def read_all(datadir):
+def read_all(datadir, hid_table):
     """Read all keycode tables.
 
     Arguments:
@@ -178,11 +289,12 @@ def read_all(datadir):
     Returns:
       List of of Keytable objects
     """
-    platforms = ["linux", "macos"]
+    hid_names = {key.name: key for key in hid_table}
+    platforms = [("linux", 256), ("macos", 128)]
     result = []
-    for name in platforms:
+    for name, size in platforms:
         try:
-            result.append(read_keytable(datadir, name))
+            result.append(read_keytable(datadir, name, size, hid_names))
         except Error as ex:
             ex.platform = name
             raise

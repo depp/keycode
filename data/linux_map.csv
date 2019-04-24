@@ -1,0 +1,52 @@
+Platform Name,HID Name
+ESC,Escape
+MINUS,Minus
+EQUAL,Equals
+BACKSPACE,Delete
+TAB,Tab
+LEFTBRACE,Left Bracket
+RIGHTBRACE,Right Bracket
+ENTER,Return
+LEFTCTRL,Left Control
+SEMICOLON,Semicolon
+APOSTROPHE,Quote
+GRAVE,Grave
+LEFTSHIFT,Left Shift
+BACKSLASH,Backslash
+COMMA,Comma
+DOT,Period
+SLASH,Slash
+RIGHTSHIFT,Right Shift
+KPASTERISK,KP Multiply
+LEFTALT,Left Alt
+SPACE,Space
+CAPSLOCK,Caps Lock
+NUMLOCK,KP NumLock
+SCROLLLOCK,Scroll Lock
+KPMINUS,KP Subtract
+KPPLUS,KP Add
+KPDOT,KP Point
+102ND,NonUS Backslash
+KPENTER,KP Enter
+RIGHTCTRL,Right Control
+KPSLASH,KP Divide
+SYSRQ,SysReq
+RIGHTALT,Right Alt
+HOME,Home
+UP,Up
+PAGEUP,Page Up
+LEFT,Left
+RIGHT,Right
+END,End
+DOWN,Down
+PAGEDOWN,Page Down
+INSERT,Insert
+DELETE,Delete Forward
+KPEQUAL,KP Equals
+PAUSE,Pause
+LEFTMETA,Left GUI
+RIGHTMETA,Right GUI
+MENU,Menu
+/([A-Z0-9])/,\1
+/(F[1-9][0-9]*)/,\1
+/KP([0-9])/,KP \1

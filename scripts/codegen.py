@@ -212,6 +212,22 @@ def make_namemap(table, fname):
     )
 
 
+XTABLE_TEMPLATE = """\
+const unsigned char {name}[{size}] = {{
+{data}
+}};
+"""
+
+
+def make_xtable(table, name):
+    """Format a translation table as C source code."""
+    return XTABLE_TEMPLATE.format(
+        name=name,
+        size=len(table),
+        data=format_numbers(table, "    "),
+    )
+
+
 def emit_keytable(open_file, keytable):
     """Emit the code files for a keycode table."""
     name = keytable.name.lower()
@@ -221,3 +237,18 @@ def emit_keytable(open_file, keytable):
         fp.write(
             make_namemap(keytable.scancodes,
                          "keycode_{}_rawname".format(name)))
+    with open_file("{}_name.c".format(name)) as fp:
+        fp.write(common_head)
+        fp.write(
+            make_namemap(keytable.displaynames,
+                         "keycode_{}_name".format(name)))
+    with open_file("{}_tohid.c".format(name)) as fp:
+        fp.write(common_head)
+        fp.write(
+            make_xtable(keytable.to_hid_table,
+                        "KEYCODE_{}_TO_HID".format(name.upper())))
+    with open_file("{}_fromhid.c".format(name)) as fp:
+        fp.write(common_head)
+        fp.write(
+            make_xtable(keytable.from_hid_table,
+                        "KEYCODE_{}_FROM_HID".format(name.upper())))

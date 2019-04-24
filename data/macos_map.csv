@@ -1,0 +1,22 @@
+Platform Name,HID Name
+ANSI_Equal,Equals
+ANSI_KeypadMinus,KP Subtract
+ANSI_KeypadPlus,KP Add
+ANSI_LeftBracket,Left Bracket
+ANSI_RightBracket,Right Bracket
+Command,Left GUI
+RightCommand,Right GUI
+Control,Left Control
+RightControl,Right Control
+Option,Left Alt
+RightOption,Right Alt
+Shift,Left Shift
+RightShift,Right Shift
+CapsLock,Caps Lock
+ForwardDelete,Delete Forward
+PageUp,Page Up
+PageDown,Page Down
+/(.+)Arrow/,\1
+/ANSI_Keypad(.+)/,KP \1
+/ANSI_(.+)/,\1
+/(.+)/,\1

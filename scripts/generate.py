@@ -22,7 +22,7 @@ def generate(*, datadir, outdir, quiet):
     """
     with tables.ReadFile(datadir, "hid.csv") as fp:
         hid_table = tables.read_hid(fp)
-    keytables = tables.read_all(datadir)
+    keytables = tables.read_all(datadir, hid_table)
 
     def open_file(name, **kw):
         return codegen.WriteFile(outdir, name, quiet=quiet, **kw)
