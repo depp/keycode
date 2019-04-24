@@ -9,6 +9,12 @@
 /* Begin PBXBuildFile section */
 		38A9BD2C22701B0B00C6E249 /* linux_rawname.c in Sources */ = {isa = PBXBuildFile; fileRef = 38A9BD2722701B0B00C6E249 /* linux_rawname.c */; };
 		38A9BD2E22701B0B00C6E249 /* macos_rawname.c in Sources */ = {isa = PBXBuildFile; fileRef = 38A9BD2922701B0B00C6E249 /* macos_rawname.c */; };
+		38A9BD36227026E500C6E249 /* macos_name.c in Sources */ = {isa = PBXBuildFile; fileRef = 38A9BD30227026E400C6E249 /* macos_name.c */; };
+		38A9BD37227026E500C6E249 /* macos_fromhid.c in Sources */ = {isa = PBXBuildFile; fileRef = 38A9BD31227026E400C6E249 /* macos_fromhid.c */; };
+		38A9BD38227026E500C6E249 /* macos_tohid.c in Sources */ = {isa = PBXBuildFile; fileRef = 38A9BD32227026E400C6E249 /* macos_tohid.c */; };
+		38A9BD39227026E500C6E249 /* linux_name.c in Sources */ = {isa = PBXBuildFile; fileRef = 38A9BD33227026E400C6E249 /* linux_name.c */; };
+		38A9BD3A227026E500C6E249 /* linux_fromhid.c in Sources */ = {isa = PBXBuildFile; fileRef = 38A9BD34227026E400C6E249 /* linux_fromhid.c */; };
+		38A9BD3B227026E500C6E249 /* linux_tohid.c in Sources */ = {isa = PBXBuildFile; fileRef = 38A9BD35227026E500C6E249 /* linux_tohid.c */; };
 		38F48EBE226BE3D400C08AE9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 38F48EBC226BE3D400C08AE9 /* Main.storyboard */; };
 		38F48EC1226BE3D400C08AE9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 38F48EC0226BE3D400C08AE9 /* main.m */; };
 /* End PBXBuildFile section */
@@ -17,6 +23,12 @@
 		38A9BD2722701B0B00C6E249 /* linux_rawname.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = linux_rawname.c; sourceTree = "<group>"; };
 		38A9BD2922701B0B00C6E249 /* macos_rawname.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = macos_rawname.c; sourceTree = "<group>"; };
 		38A9BD2B22701B0B00C6E249 /* keytable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = keytable.h; sourceTree = "<group>"; };
+		38A9BD30227026E400C6E249 /* macos_name.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = macos_name.c; sourceTree = "<group>"; };
+		38A9BD31227026E400C6E249 /* macos_fromhid.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = macos_fromhid.c; sourceTree = "<group>"; };
+		38A9BD32227026E400C6E249 /* macos_tohid.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = macos_tohid.c; sourceTree = "<group>"; };
+		38A9BD33227026E400C6E249 /* linux_name.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = linux_name.c; sourceTree = "<group>"; };
+		38A9BD34227026E400C6E249 /* linux_fromhid.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = linux_fromhid.c; sourceTree = "<group>"; };
+		38A9BD35227026E500C6E249 /* linux_tohid.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = linux_tohid.c; sourceTree = "<group>"; };
 		38F48EB1226BE3D200C08AE9 /* CocoaTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CocoaTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		38F48EBD226BE3D400C08AE9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		38F48EBF226BE3D400C08AE9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -38,6 +50,12 @@
 		38A9BD2622701B0B00C6E249 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				38A9BD34227026E400C6E249 /* linux_fromhid.c */,
+				38A9BD33227026E400C6E249 /* linux_name.c */,
+				38A9BD35227026E500C6E249 /* linux_tohid.c */,
+				38A9BD31227026E400C6E249 /* macos_fromhid.c */,
+				38A9BD30227026E400C6E249 /* macos_name.c */,
+				38A9BD32227026E400C6E249 /* macos_tohid.c */,
 				38A9BD2722701B0B00C6E249 /* linux_rawname.c */,
 				38A9BD2922701B0B00C6E249 /* macos_rawname.c */,
 				38A9BD2B22701B0B00C6E249 /* keytable.h */,
@@ -142,9 +160,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38A9BD3A227026E500C6E249 /* linux_fromhid.c in Sources */,
+				38A9BD36227026E500C6E249 /* macos_name.c in Sources */,
 				38A9BD2E22701B0B00C6E249 /* macos_rawname.c in Sources */,
+				38A9BD37227026E500C6E249 /* macos_fromhid.c in Sources */,
 				38A9BD2C22701B0B00C6E249 /* linux_rawname.c in Sources */,
+				38A9BD3B227026E500C6E249 /* linux_tohid.c in Sources */,
+				38A9BD38227026E500C6E249 /* macos_tohid.c in Sources */,
 				38F48EC1226BE3D400C08AE9 /* main.m in Sources */,
+				38A9BD39227026E500C6E249 /* linux_name.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

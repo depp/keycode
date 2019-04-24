@@ -21,20 +21,27 @@
 @end
 
 @implementation KCView
-- (void)showKey:(int)keyCode {
+- (void)showKey:(unsigned)keyCode hidCode:(unsigned)hidCode {
     const char *keyName = keycode_macos_rawname(keyCode);
     if (keyName == NULL) {
         keyName = "unknown";
     }
     _macOSKeyCode.stringValue = [NSString stringWithFormat:@"0x%02x (%s)", keyCode, keyName];
+    const char *hidName = keycode_macos_name(hidCode);
+    if (hidName == NULL) {
+        hidName = "unknown";
+    }
+    _hidKeyCode.stringValue = [NSString stringWithFormat:@"0x%02x (%s)", hidCode, hidName];
 }
 - (void)keyDown:(NSEvent *)event {
-    int keyCode = [event keyCode];
-    [self showKey:keyCode];
+    unsigned keyCode = [event keyCode];
+    unsigned hidCode = keyCode < 128 ? KEYCODE_MACOS_TO_HID[keyCode] : 0;
+    [self showKey:keyCode hidCode:hidCode];
 }
 - (void)flagsChanged:(NSEvent *)event {
     unsigned keyCode = [event keyCode];
-    [self showKey:keyCode];
+    unsigned hidCode = keyCode < 128 ? KEYCODE_MACOS_TO_HID[keyCode] : 0;
+    [self showKey:keyCode hidCode:hidCode];
 }
 - (BOOL)acceptsFirstResponder {
     return YES;
