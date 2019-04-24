@@ -18,11 +18,16 @@ static void key_press(XKeyEvent *e) {
     if (keyname == NULL) {
         keyname = "unknown";
     }
+    unsigned hidcode = keycode < 256 ? KEYCODE_LINUX_TO_HID[keycode] : 0;
+    const char *hidname = keycode_linux_name(hidcode);
+    if (hidname == NULL) {
+        hidname = "unknown";
+    }
     printf(
         "Key press:\n"
         "  X11 Keycode: 0x%02x (%s)\n"
-        "\n",
-        keycode, keyname);
+        "  HID Keycode: 0x%02x (%s)\n",
+        keycode, keyname, hidcode, hidname);
 }
 
 int main(int argc, char **argv) {
