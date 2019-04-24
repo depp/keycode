@@ -14,6 +14,16 @@ enum {
     KEYCODE_NONE = 255,
 };
 
+/* Get the identifier for the give HID keycode. The identifier is a unique
+   alphanumeric string that uniquely identifies the key. Returns NULL if the
+   keycode does not exist or is not used in any mapping. */
+const char *keycode_to_id(unsigned keycode);
+
+/* Look up an HID keycode with by its identifier. Returns 0 if no keycode has
+   the given identifier, or if the keycode is not used in any mapping. Lookup is
+   case insensitive. */
+unsigned keycode_from_id(const char *id);
+
 /*
  * =============================================================================
  * Linux

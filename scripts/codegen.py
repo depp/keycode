@@ -288,6 +288,16 @@ def enum_name(name):
     return prefix + name.replace(" ", "")
 
 
+KEYCODE_ID_TEMPLATE = """\
+enum {{
+    KEYCODE_ID_MAXLEN = {maxlen}
+}};
+static const unsigned char KEYCODE_ID_ORDER[] = {{
+{order}
+}};
+"""
+
+
 def emit_keycodes(open_file, hid_table):
     """Emit the cross-platform generated source files."""
     enums = io.StringIO()
@@ -298,3 +308,19 @@ def emit_keycodes(open_file, hid_table):
             enums.write(",\n")
     with open_file("keycode.h", guard="KEYCODE_KEYCODE_H") as fp:
         fp.write(KEYCODE_TEMPLATE.format(enums.getvalue()))
+    idents = [(key.code, key.name.replace(" ", "")) for key in hid_table]
+    alpha_order = [
+        code for code, ident in sorted(idents, key=lambda x: x[1].lower())
+    ]
+    dirpath = os.path.dirname(os.path.abspath(__file__))
+    with open(os.path.join(dirpath, "keycode_id.c")) as fp:
+        keycode_id = fp.read()
+    with open_file("keycode_id.c") as fp:
+        fp.write('#include "keytable.h"\n')
+        fp.write(make_namemap(idents, "keycode_to_id"))
+        fp.write(
+            KEYCODE_ID_TEMPLATE.format(
+                maxlen=max(len(ident) for code, ident in idents),
+                order=format_numbers(alpha_order, "    "),
+            ))
+        fp.write(keycode_id)

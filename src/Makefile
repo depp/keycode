@@ -11,11 +11,13 @@ endif
 all: libkeycode.a
 
 objs := \
+	keycode_id.o \
 	linux_fromhid.o linux_name.o linux_rawname.o linux_tohid.o
 
 clean:
 	rm -f $(objs) libkeycode.a
 
+keycode_id.o: keycode_id.c keytable.h
 linux_fromhid.o: linux_fromhid.c keytable.h
 linux_rawname.o: linux_rawname.c keytable.h
 linux_name.o: linux_name.c keytable.h
