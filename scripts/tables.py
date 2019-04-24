@@ -1,3 +1,6 @@
+# Copyright 2019 Dietrich Epp.
+# This file is licensed under the terms of the MIT license. See LICENSE.txt
+# for details.
 """Keycode table generation functions."""
 import collections
 import csv
@@ -137,4 +140,50 @@ def read_scancodes(fp):
             codes.add(code)
             if name:
                 result.append(Scancode(code, name))
+    return result
+
+
+class Keytable:
+    """A keycode table for a platform.
+
+    Attributes:
+      name: Platform name
+      scancodes: List of Scancode objects
+    """
+
+    def __init__(self, name, scancodes):
+        self.name = name
+        self.scancodes = scancodes
+
+
+def read_keytable(datadir, name):
+    """Read keycode tables.
+
+    Arguments:
+      datadir: Directory containing input data
+      name: Platform name
+    Returns:
+      A Keytable object for the platform
+    """
+    with ReadFile(datadir, "{}_scancodes.csv".format(name)) as fp:
+        scancodes = read_scancodes(fp)
+    return Keytable(name, scancodes)
+
+
+def read_all(datadir):
+    """Read all keycode tables.
+
+    Arguments:
+      datadir: Directory containing input data
+    Returns:
+      List of of Keytable objects
+    """
+    platforms = ["linux", "macos"]
+    result = []
+    for name in platforms:
+        try:
+            result.append(read_keytable(datadir, name))
+        except Error as ex:
+            ex.platform = name
+            raise
     return result

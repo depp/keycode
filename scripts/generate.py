@@ -1,3 +1,6 @@
+# Copyright 2019 Dietrich Epp.
+# This file is licensed under the terms of the MIT license. See LICENSE.txt
+# for details.
 """Generate keycode maps from extracted data files."""
 import argparse
 import os
@@ -5,6 +8,7 @@ import sys
 
 from common import Error
 
+import codegen
 import tables
 
 
@@ -18,14 +22,13 @@ def generate(*, datadir, outdir, quiet):
     """
     with tables.ReadFile(datadir, "hid.csv") as fp:
         hid_table = tables.read_hid(fp)
-    for key in hid_table:
-        print(key)
-    for platform in ["linux", "macos", "windows"]:
-        fname = "{}_scancodes.csv".format(platform)
-        with tables.ReadFile(datadir, fname) as fp:
-            scancode_table = tables.read_scancodes(fp)
-        for key in scancode_table:
-            print(key)
+    keytables = tables.read_all(datadir)
+
+    def open_file(name, **kw):
+        return codegen.WriteFile(outdir, name, quiet=quiet, **kw)
+
+    for keytable in keytables:
+        codegen.emit_keytable(open_file, keytable)
 
 
 def main(argv):

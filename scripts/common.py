@@ -1,3 +1,6 @@
+# Copyright 2019 Dietrich Epp.
+# This file is licensed under the terms of the MIT license. See LICENSE.txt
+# for details.
 """Common definitions."""
 
 
