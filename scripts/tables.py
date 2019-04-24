@@ -66,6 +66,8 @@ def read_hid(fp):
         raise Error("Got headers {!r}, expected {!r}".format(row, headers),
                     lineno=1)
     for lineno, row in enumerate(reader, 2):
+        if not row:
+            continue
         try:
             codestr, name, displayname = row
         except ValueError:
@@ -124,6 +126,8 @@ def read_scancodes(fp):
         raise Error("Got headers {!r}, expected {!r}".format(row, headers),
                     lineno=1)
     for lineno, row in enumerate(reader, 2):
+        if not row:
+            continue
         if len(row) != 2:
             raise error("Got {} columns, expected 2".format(len(row)))
         codestr, name = row
@@ -163,6 +167,8 @@ def read_names(fp):
         raise Error("Got headers {!r}, expected {!r}".format(row, headers),
                     lineno=1)
     for lineno, row in enumerate(reader, 2):
+        if not row:
+            continue
         try:
             name, displayname = row
         except ValueError:
