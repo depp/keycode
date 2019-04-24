@@ -1,10 +1,9 @@
 // Copyright 2018-2019 Dietrich Epp.
-// This file is licensed under the terms of the MIT license, see LICENSE.txt
+// This file is licensed under the terms of the MIT license. See LICENSE.txt
 // for details.
 
 // This will create a window and print out the X11 keycode and corresponding HID
 // keycode and name for every key down event.
-#include "keyid.h"
 #include "keytable.h"
 
 #include <X11/Xlib.h>
@@ -14,14 +13,16 @@
 
 static void key_press(XKeyEvent *e) {
     printf("Key Press:\n");
-    printf("  X11 Keycode: %d\n", e->keycode);
-    int hid_code = EVDEV_NATIVE_TO_HID[e->keycode];
-    if (hid_code == 255) {
-        printf("  HID Keycode: none\n");
-    } else {
-        printf("  HID Keycode: %d (%s)\n", hid_code, keyid_name_from_code(hid_code));
+    unsigned keycode = e->keycode - KEYCODE_EVDEV_OFFSET;
+    const char *keyname = keycode_linux_rawname(keycode);
+    if (keyname == NULL) {
+        keyname = "unknown";
     }
-    printf("\n");
+    printf(
+        "Key press:\n"
+        "  X11 Keycode: 0x%02x (%s)\n"
+        "\n",
+        keycode, keyname);
 }
 
 int main(int argc, char **argv) {

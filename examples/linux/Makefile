@@ -1,23 +1,22 @@
-all: x11_test
-clean:
-	rm -f *.o x11_test
-
-CFLAGS = -O2 -g
-CWARN = -Wall -Wextra -Wpointer-arith -Wwrite-strings -Wmissing-prototypes -Winit-self
+CFLAGS := -O2
+CWARN := -Wall -Wextra -Wpointer-arith -Wwrite-strings -Wmissing-prototypes -Winit-self -Wstrict-prototypes
+CPPFLAGS = -I../../src
 ifdef WERROR
 override CWARN += -Werror
+override WARN = 1
 endif
-CPPFLAGS = -I../..
+ifdef WARN
+override CFLAGS := $(CWARN) $(CFLAGS)
+endif
 
-compile = $(CC) $(CPPFLAGS) $(CWARN) $(CFLAGS) -c $< -o $@
+all: x11_test
+clean:
+	rm -f x11_test.o x11_test
 
-keyid.o: ../../keyid.c ../../keyid.h
-	$(compile)
-keytable_evdev.o: ../../keytable_evdev.c
-	$(compile)
-x11_test.o: x11_test.c ../../keyid.h ../../keytable.h
-	$(compile)
+x11_test.o: x11_test.c ../../src/keytable.h
+../../src/libkeycode.a:
+	$(MAKE) -C ../../src libkeycode.a
 
 x11_test: LIBS += $(shell pkg-config --libs x11)
-x11_test: x11_test.o keyid.o keytable_evdev.o
+x11_test: x11_test.o ../../src/libkeycode.a
 	$(CC) $(LDFLAGS) -o $@ $^ $(LIBS)
