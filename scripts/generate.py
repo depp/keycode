@@ -23,10 +23,16 @@ def generate(*, datadir, outdir, quiet):
     with tables.ReadFile(datadir, "hid.csv") as fp:
         hid_table = tables.read_hid(fp)
     keytables = tables.read_all(datadir, hid_table)
+    hid_used = set()
+    for keytable in keytables:
+        hid_used.update(keytable.to_hid_table)
+    hid_used.discard(0)
 
     def open_file(name, **kw):
         return codegen.WriteFile(outdir, name, quiet=quiet, **kw)
 
+    codegen.emit_keycodes(open_file,
+                          [key for key in hid_table if key.code in hid_used])
     for keytable in keytables:
         codegen.emit_keytable(open_file, keytable)
 

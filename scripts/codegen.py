@@ -252,3 +252,49 @@ def emit_keytable(open_file, keytable):
         fp.write(
             make_xtable(keytable.from_hid_table,
                         "KEYCODE_{}_FROM_HID".format(name.upper())))
+
+
+KEYCODE_TEMPLATE = """\
+
+/* HID keycode definitions. These keycodes are portable, and correspond to
+   locations on the keyboard. For example, the keycode KEY_A corresponds to the
+   "A" key on US keyboard layouts, but KEY_A corresponds to the "Q" key on
+   French keyboard layouts. In either case, KEY_A is in the same physical
+   location on the keyboard.
+
+   Platform-specific scancodes can be converted to the HID keycodes defined
+   here, see keytable.h. All keycodes which can be generated on at least one
+   platform are included here, but not all platforms will produce all keycodes.
+   The names of these keycodes are taken, with some modifications, from the HID
+   usage tables. Key codes starting with KEY are general keys, and the keys on
+   the numeric keypad have key codes starting with KP. */
+enum {{
+    /* Zero, does not correspond to any key. */
+    KEY_None = 0,
+
+    /* Keycode definitions. */
+{}
+}};
+
+"""
+
+
+def enum_name(name):
+    """Translate an HID name to an enumeration name."""
+    prefix = "KEY_"
+    if name.startswith("KP "):
+        name = name[3:]
+        prefix = "KP_"
+    return prefix + name.replace(" ", "")
+
+
+def emit_keycodes(open_file, hid_table):
+    """Emit the cross-platform generated source files."""
+    enums = io.StringIO()
+    last = hid_table[-1]
+    for key in hid_table:
+        enums.write("    {} = {}".format(enum_name(key.name), key.code))
+        if key is not last:
+            enums.write(",\n")
+    with open_file("keycode.h", guard="KEYCODE_KEYCODE_H") as fp:
+        fp.write(KEYCODE_TEMPLATE.format(enums.getvalue()))
